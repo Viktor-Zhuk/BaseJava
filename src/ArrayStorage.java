@@ -22,23 +22,19 @@ public class ArrayStorage {
             }
         }
         if (isNewResume) {
-        storage[numberResume] = resume;
-        numberResume++;
+            storage[numberResume] = resume;
+            numberResume++;
         }
     }
 
     public Resume get(String uuid) {
-        Resume rezume = new Resume();
         for (int i = 0; i < numberResume; i++) {
             if (storage[i].uuid == uuid) {
-                rezume = storage[i];
-                break;
+                return storage[i];
             }
         }
-        if (rezume.uuid == null) {
-            System.out.println("Resume not found");
-        }
-        return rezume;
+        System.out.println("Resume not found");
+        return null;
     }
 
     public void delete(String uuid) {
@@ -46,12 +42,12 @@ public class ArrayStorage {
         for (int i = 0; i < numberResume; i++) {
             if (storage[i].uuid == uuid) {
                 isResume = true;
+                numberResume--;
             }
             if (isResume) {
                 storage[i] = storage[i + 1];
             }
         }
-        numberResume--;
     }
 
     /**
