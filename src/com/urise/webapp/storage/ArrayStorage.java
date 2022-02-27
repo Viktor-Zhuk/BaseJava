@@ -1,51 +1,53 @@
+package com.urise.webapp.storage;
+
+import com.urise.webapp.model.Resume;
+
 /**
  * Array based storage for Resumes
  */
 public class ArrayStorage {
     private Resume[] storage = new Resume[10000];
-    private int numberResume = 0;
+    private int size = 0;
 
 
     public void clear() {
-        for (int i = 0; i < numberResume; i++) {
+        for (int i = 0; i < size; i++) {
             storage[i] = null;
         }
-        numberResume = 0;
+        size = 0;
     }
 
     public void save(Resume resume) {
         boolean isNewResume = true;
-        for (int i = 0; i < numberResume; i++) {
+        for (int i = 0; i < size; i++) {
             if (storage[i].uuid == resume.uuid) {
                 isNewResume = false;
                 break;
             }
         }
         if (isNewResume) {
-            storage[numberResume] = resume;
-            numberResume++;
+            storage[size] = resume;
+            size++;
         }
     }
 
     public Resume get(String uuid) {
-        for (int i = 0; i < numberResume; i++) {
+        for (int i = 0; i < size; i++) {
             if (storage[i].uuid == uuid) {
                 return storage[i];
             }
         }
-        System.out.println("Resume not found");
+        System.out.println("com.urise.webapp.model.Resume not found");
         return null;
     }
 
     public void delete(String uuid) {
-        boolean isResume = false;
-        for (int i = 0; i < numberResume; i++) {
+        for (int i = 0; i < size; i++) {
             if (storage[i].uuid == uuid) {
-                isResume = true;
-                numberResume--;
-            }
-            if (isResume) {
-                storage[i] = storage[i + 1];
+                storage[i].uuid = storage[size - 1].uuid;
+                storage[size - 1].uuid = null;
+                size--;
+                break;
             }
         }
     }
@@ -54,14 +56,14 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     public Resume[] getAll() {
-        Resume[] filledResume = new Resume[numberResume];
-        for (int i = 0; i < numberResume; i++) {
+        Resume[] filledResume = new Resume[size];
+        for (int i = 0; i < size; i++) {
             filledResume[i] = storage[i];
         }
         return filledResume;
     }
 
     public int size() {
-        return numberResume;
+        return size;
     }
 }
