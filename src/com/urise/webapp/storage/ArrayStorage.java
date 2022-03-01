@@ -1,5 +1,6 @@
 package com.urise.webapp.storage;
 
+import com.sun.xml.internal.ws.api.model.wsdl.WSDLOutput;
 import com.urise.webapp.model.Resume;
 
 /**
@@ -17,39 +18,62 @@ public class ArrayStorage {
         size = 0;
     }
 
-    public void save(Resume resume) {
-        boolean isNewResume = true;
-        for (int i = 0; i < size; i++) {
-            if (storage[i].uuid == resume.uuid) {
-                isNewResume = false;
-                break;
-            }
+    public void update(Resume resume) {
+        int i = searchResume(resume);
+        if (i != -1) {
+            storage[i] = resume;
+        } else {
+            System.out.println("ERROR: resume not found");
         }
-        if (isNewResume) {
+    }
+
+    public void save(Resume resume) {
+        int i = searchResume(resume);
+        if (i != -1) {
+            System.out.println("ERROR: this resume already recorded");
+        } else if (i == 10000){
+            System.out.println("ERROR: the resume database is filled in");
+        } else {
             storage[size] = resume;
             size++;
         }
     }
 
-    public Resume get(String uuid) {
+    public int searchResume(Resume resume) {
         for (int i = 0; i < size; i++) {
-            if (storage[i].uuid == uuid) {
-                return storage[i];
+            if (storage[i].getUuid() == resume.getUuid()) {
+                return i;
             }
         }
-        System.out.println("com.urise.webapp.model.Resume not found");
-        return null;
+        return -1;
+    }
+
+    public Resume get(String uuid) {
+        int i = searchUuid(uuid);
+        if (i != -1) {
+            return storage[i];
+        } else {
+            System.out.println("Resume not found");
+            return null;
+        }
     }
 
     public void delete(String uuid) {
+        int i = searchUuid(uuid);
+        if (i != -1) {
+            storage[i].setUuid(storage[size - 1].getUuid());
+            storage[size - 1].setUuid(null);
+            size--;
+        }
+    }
+
+    public int searchUuid(String uuid) {
         for (int i = 0; i < size; i++) {
-            if (storage[i].uuid == uuid) {
-                storage[i].uuid = storage[size - 1].uuid;
-                storage[size - 1].uuid = null;
-                size--;
-                break;
+            if (uuid.equals(storage[i].getUuid())) {
+                return i;
             }
         }
+        return -1;
     }
 
     /**
@@ -67,3 +91,4 @@ public class ArrayStorage {
         return size;
     }
 }
+
