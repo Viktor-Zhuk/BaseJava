@@ -1,6 +1,5 @@
 package com.urise.webapp.storage;
 
-import com.sun.xml.internal.ws.api.model.wsdl.WSDLOutput;
 import com.urise.webapp.model.Resume;
 
 import java.util.Arrays;
@@ -18,20 +17,22 @@ public class ArrayStorage {
     }
 
     public void update(Resume resume) {
-        int i = searchResume(resume.getUuid());
-        if (i != -1) {
-            storage[i] = resume;
-            System.out.println("Resume " + resume.getUuid() + " successfully updated");
+        String uuidResume = resume.getUuid();
+        int index = findIndex(uuidResume);
+        if (index != -1) {
+            storage[index] = resume;
+            System.out.println("Resume " + uuidResume + " successfully updated");
         } else {
-            System.out.println("ERROR: resume " + resume.getUuid() + " not found");
+            System.out.println("ERROR: resume " + uuidResume + " not found");
         }
     }
 
     public void save(Resume resume) {
-        int i = searchResume(resume.getUuid());
-        if (i != -1) {
-            System.out.println("ERROR: resume " + resume.getUuid() + " already recorded");
-        } else if (i == storage.length){
+        String uuidResume = resume.getUuid();
+        int index = findIndex(uuidResume);
+        if (index != -1) {
+            System.out.println("ERROR: resume " + uuidResume + " already recorded");
+        } else if (index == storage.length){
             System.out.println("ERROR: the resume database is filled in");
         } else {
             storage[size] = resume;
@@ -40,29 +41,28 @@ public class ArrayStorage {
     }
 
     public Resume get(String uuid) {
-        int i = searchResume(uuid);
-        if (i != -1) {
-            return storage[i];
-        } else {
-            System.out.println("Resume " + uuid + " not found");
-            return null;
+        int index = findIndex(uuid);
+        if (index != -1) {
+            return storage[index];
         }
+        System.out.println("Resume " + uuid + " not found");
+        return null;
     }
 
     public void delete(String uuid) {
-        int i = searchResume(uuid);
-        if (i != -1) {
-            storage[i] = null;
-            storage[i] = storage[size - 1];
+        int index = findIndex(uuid);
+        if (index != -1) {
+            storage[index] = storage[size - 1];
             storage[size - 1] = null;
             size--;
+        } else {
+            System.out.println("ERROR: Resume " + uuid + " not deleted");
         }
     }
 
-    public int searchResume(String uuid) {
+    public int findIndex(String uuid) {
         for (int i = 0; i < size; i++) {
             String uuidInBase = storage[i].getUuid();
-
             if (uuidInBase.equals(uuid)) {
                 return i;
             }
@@ -74,8 +74,7 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     public Resume[] getAll() {
-        Resume[] filledResume = Arrays.copyOf(storage, size);;
-        return filledResume;
+        return Arrays.copyOf(storage, size);
     }
 
     public int size() {
