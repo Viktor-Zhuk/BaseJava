@@ -32,7 +32,7 @@ public class ArrayStorage {
         int index = findIndex(uuidResume);
         if (index != -1) {
             System.out.println("ERROR: resume " + uuidResume + " already recorded");
-        } else if (index == storage.length){
+        } else if (size == storage.length){
             System.out.println("ERROR: the resume database is filled in");
         } else {
             storage[size] = resume;
@@ -60,10 +60,9 @@ public class ArrayStorage {
         }
     }
 
-    public int findIndex(String uuid) {
+    private int findIndex(String uuid) {
         for (int i = 0; i < size; i++) {
-            String uuidInBase = storage[i].getUuid();
-            if (uuidInBase.equals(uuid)) {
+            if (storage[i].getUuid().equals(uuid)) {
                 return i;
             }
         }
