@@ -20,7 +20,7 @@ public abstract class AbstractArrayStorage implements Storage{
     public void update(Resume resume) {
         String uuidResume = resume.getUuid();
         int index = getIndex(uuidResume);
-        if (index != -1) {
+        if (index >= 0) {
             storage[index] = resume;
             System.out.println("Resume " + uuidResume + " successfully updated");
         } else {
@@ -53,7 +53,7 @@ public abstract class AbstractArrayStorage implements Storage{
     }
 
     public Resume[] getAll() {
-            return Arrays.copyOfRange(storage, 0, size);
+            return Arrays.copyOfRange(storage, size);
     }
 
     public int size() {
